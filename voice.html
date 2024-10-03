@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text and Text-to-Speech</title>
+</head>
+<body>
+
+    <h1>Speech-to-Text and Text-to-Speech Demo</h1>
+    
+    <button onclick="startListening()">Start Listening</button>
+    <p id="outputText">Say something...</p>
+
+    <script>
+        // Speech Recognition (Speech-to-Text)
+        const outputText = document.getElementById('outputText');
+
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                outputText.innerText = "You said: " + transcript;
+                speakText(transcript);  // Call text-to-speech after recognizing the text
+            };
+
+            recognition.onerror = (event) => {
+                outputText.innerText = "Error occurred: " + event.error;
+            };
+        }
+
+        // Speech Synthesis (Text-to-Speech)
+        function speakText(text) {
+            const synth = window.speechSynthesis;
+            const utterThis = new SpeechSynthesisUtterance(text);
+            synth.speak(utterThis);
+        }
+    </script>
+
+</body>
+</html>
